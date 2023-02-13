@@ -18,7 +18,7 @@
     using Serialization;
     using Util;
 
-    //8.0.13-develop.963
+    //8.0.13-develop.968 (checking message count == 0)
     public class CustomBusOutboxDeliveryService<TDbContext> :
         BackgroundService
         where TDbContext : DbContext
@@ -79,7 +79,7 @@
         {
             var resultCount = 0;
 
-            StartedActivity? activity = LogContext.Current?.StartGenericActivity("outbox loop testing");
+            StartedActivity? activty = LogContext.Current?.StartGenericActivity("outbox loop testing");
             try
             {
                 for (var i = 0; i < resultLimit; i++)
@@ -87,11 +87,14 @@
                     var messageCount = await DeliverOutbox(cancellationToken).ConfigureAwait(false);
                     if (messageCount > 0)
                         resultCount++;
+
+                    if (messageCount == 0)
+                        break;
                 }
             }
             finally
             {
-                activity?.Stop();
+                activty?.Stop();
             }
 
             return resultCount;
@@ -214,7 +217,7 @@
         {
             var messageLimit = _options.MessageDeliveryLimit;
 
-            bool hasLastSequenceNumber = outboxState.LastSequenceNumber.HasValue;
+            var hasLastSequenceNumber = outboxState.LastSequenceNumber.HasValue;
 
             var lastSequenceNumber = outboxState.LastSequenceNumber ?? 0;
 

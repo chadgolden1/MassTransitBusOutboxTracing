@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(UsePreview)' == 'true' ">
-    <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.0.13-develop.963" />
+    <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.0.13-develop.968" />
     <Compile Remove="Custom\**" />
     <None Include="Custom\**" />
   </ItemGroup>
